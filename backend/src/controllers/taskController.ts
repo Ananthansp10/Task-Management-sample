@@ -19,7 +19,7 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
             createdBy: (req as any).user._id,
         });
 
-        // Update files with task ID
+
         if (attachments && attachments.length > 0) {
             await (require('../models/File').default).updateMany(
                 { _id: { $in: attachments } },
@@ -87,7 +87,7 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
             return sendResponse(res, STATUS_CODES.NOT_FOUND, MESSAGES.TASK_NOT_FOUND);
         }
 
-        // Update files with task ID if attachments are updated
+
         if (attachments && attachments.length > 0) {
             await (require('../models/File').default).updateMany(
                 { _id: { $in: attachments } },

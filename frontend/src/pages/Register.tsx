@@ -47,7 +47,7 @@ const Register = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        // Clear error when user starts typing
+
         if (errors[e.target.name]) {
             setErrors({ ...errors, [e.target.name]: '' });
         }

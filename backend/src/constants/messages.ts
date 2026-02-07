@@ -14,11 +14,11 @@ export const MESSAGES = {
     FILE_UPLOADED: "File uploaded successfully",
     FILE_DELETED: "File deleted successfully",
     SERVER_ERROR: "Internal Server Error",
-    // User
+
     USER_UPDATED: "User updated successfully",
     USER_DELETED: "User deleted successfully",
     USERS_FETCHED: "Users fetched successfully",
     USER_FETCHED: "User fetched successfully",
-    // Analytics
+
     DASHBOARD_STATS_FETCHED: "Dashboard stats fetched successfully",
 };

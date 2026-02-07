@@ -11,8 +11,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
 
         const { filename, path: filepath, mimetype, size } = req.file;
 
-        // In a real scenario, you'd associate this with a user/task immediately or later.
-        // For now, we'll return the file metadata and let the frontend attach the ID to the task.
+
 
         const newFile = await File.create({
             filename,
@@ -20,7 +19,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
             mimetype,
             size,
             uploadedBy: (req as any).user._id,
-            // task: ... will be associated when task is created/updated
+
         });
 
         sendResponse(res, STATUS_CODES.CREATED, 'File uploaded successfully', newFile);

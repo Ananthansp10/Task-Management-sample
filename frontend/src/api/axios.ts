@@ -8,15 +8,14 @@ const api = axios.create({
     withCredentials: true, // Important for cookies
 });
 
-// Response interceptor to handle 401 (Unauthorized)
+
 api.interceptors.response.use(
     (response) => {
         return response;
     },
     (error) => {
         if (error.response && error.response.status === 401) {
-            // Optional: Redirect to login or clear state if needed
-            // But usually handled by AuthContext checking /me endpoint failure
+
         }
         return Promise.reject(error);
     }

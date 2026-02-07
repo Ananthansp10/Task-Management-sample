@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
 interface User {
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const checkAuth = async () => {
         setLoading(true);
@@ -50,8 +52,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const logout = async () => {
         try {
-            await api.get('/auth/logout');
+            await api.post('/auth/logout');
             setUser(null);
+            navigate('/login');
         } catch (error) {
             console.error("Logout failed", error);
         }

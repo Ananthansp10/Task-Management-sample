@@ -22,10 +22,10 @@ app.use(cors({
     credentials: true,
 }));
 
-// Static files
+
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
     sendResponse(res, STATUS_CODES.OK, 'API is running');
 });
 
-// Error Handling
+
 app.use(errorHandler);
 
 export default app;

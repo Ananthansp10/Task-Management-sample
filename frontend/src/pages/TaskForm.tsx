@@ -75,7 +75,7 @@ const TaskForm = () => {
                 setGeneralError("File upload failed");
             } finally {
                 setUploading(false);
-                // Reset input
+
                 e.target.value = '';
             }
         }
