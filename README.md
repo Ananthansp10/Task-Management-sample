@@ -199,11 +199,3 @@ NODE_ENV=production
 
 ### Frontend
 The frontend uses `http://localhost:5000` as the API base URL by default. Update `frontend/src/api/axios.ts` for production deployment.
-
-## License
-
-MIT
-
-## Author
-
-Your Name
