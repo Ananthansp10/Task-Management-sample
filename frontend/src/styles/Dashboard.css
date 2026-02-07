@@ -1,0 +1,74 @@
+.page-title {
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    color: var(--text-color);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.stat-card.completed .value {
+    color: var(--success-color);
+}
+
+.stat-card.progress .value {
+    color: #f59e0b;
+}
+
+.stat-card.pending .value {
+    color: #666;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.priority-list {
+    margin-top: 1rem;
+}
+
+.priority-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.priority-item:last-child {
+    border-bottom: none;
+}
+
+.overdue-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.overdue-stat .value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--error-color);
+}

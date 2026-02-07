@@ -1,0 +1,29 @@
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-table th {
+    font-weight: 600;
+    color: #666;
+    background-color: #f9fafb;
+}
+
+.user-table tr:last-child td {
+    border-bottom: none;
+}
+
+.role-select {
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0;
+    width: auto;
+}
