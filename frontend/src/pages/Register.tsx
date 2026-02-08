@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useToast } from '../context/ToastContext';
 import api from '../api/axios';
 import '../styles/Auth.css';
 
@@ -11,6 +12,7 @@ const Register = () => {
     });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [generalError, setGeneralError] = useState('');
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     const validate = () => {
@@ -38,10 +40,13 @@ const Register = () => {
         try {
             const response = await api.post('/auth/register', formData);
             if (response.data.success) {
-                navigate('/login'); // Redirect to login as requested
+                showToast('Registration successful! Please login.', 'success');
+                navigate('/login');
             }
         } catch (err: any) {
-            setGeneralError(err.response?.data?.message || 'Registration failed');
+            const errorMessage = err.response?.data?.message || 'Registration failed';
+            setGeneralError(errorMessage);
+            showToast(errorMessage, 'error');
         }
     };
 

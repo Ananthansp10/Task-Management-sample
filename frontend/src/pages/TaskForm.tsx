@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useToast } from '../context/ToastContext';
 import api from '../api/axios';
 import '../styles/Tasks.css';
 
@@ -21,6 +22,7 @@ const TaskForm = () => {
 
     const [attachments, setAttachments] = useState<any[]>([]);
     const [uploading, setUploading] = useState(false);
+    const { showToast } = useToast();
 
     useEffect(() => {
         if (isEditMode) {
@@ -50,9 +52,51 @@ const TaskForm = () => {
 
     const validate = () => {
         const newErrors: { [key: string]: string } = {};
-        if (!formData.title.trim()) newErrors.title = 'Title is required';
-        if (!formData.due_date) newErrors.due_date = 'Due date is required';
+
+        // Title validation
+        if (!formData.title.trim()) {
+            newErrors.title = 'Title is required';
+        } else if (formData.title.trim().length < 3) {
+            newErrors.title = 'Title must be at least 3 characters';
+        } else if (formData.title.trim().length > 100) {
+            newErrors.title = 'Title must not exceed 100 characters';
+        }
+
+        // Description validation (optional but with max length)
+        if (formData.description && formData.description.length > 500) {
+            newErrors.description = 'Description must not exceed 500 characters';
+        }
+
+        // Due date validation
+        if (!formData.due_date) {
+            newErrors.due_date = 'Due date is required';
+        } else {
+            const selectedDate = new Date(formData.due_date);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                newErrors.due_date = 'Due date cannot be in the past';
+            }
+        }
+
+        // Status validation
+        if (!formData.status) {
+            newErrors.status = 'Status is required';
+        }
+
+        // Priority validation
+        if (!formData.priority) {
+            newErrors.priority = 'Priority is required';
+        }
+
         setErrors(newErrors);
+
+        // Show toast for validation errors
+        if (Object.keys(newErrors).length > 0) {
+            showToast('Please fix the validation errors', 'error');
+        }
+
         return Object.keys(newErrors).length === 0;
     };
 
@@ -69,10 +113,13 @@ const TaskForm = () => {
                 });
                 if (response.data.success) {
                     setAttachments([...attachments, response.data.data]);
+                    showToast('File uploaded successfully', 'success');
                 }
             } catch (err) {
                 console.error("File upload failed", err);
-                setGeneralError("File upload failed");
+                const errorMessage = "File upload failed";
+                setGeneralError(errorMessage);
+                showToast(errorMessage, 'error');
             } finally {
                 setUploading(false);
 
@@ -106,13 +153,17 @@ const TaskForm = () => {
 
             if (isEditMode) {
                 await api.put(`/tasks/${id}`, payload);
+                showToast('Task updated successfully!', 'success');
             } else {
                 await api.post('/tasks', payload);
+                showToast('Task created successfully!', 'success');
             }
             navigate('/tasks');
         } catch (err: any) {
             console.error("Failed to save task", err);
-            setGeneralError(err.response?.data?.message || "Failed to save task");
+            const errorMessage = err.response?.data?.message || "Failed to save task";
+            setGeneralError(errorMessage);
+            showToast(errorMessage, 'error');
         } finally {
             setLoading(false);
         }
@@ -150,7 +201,9 @@ const TaskForm = () => {
                             value={formData.description}
                             onChange={handleChange}
                             rows={4}
+                            placeholder="Enter task description (optional)"
                         />
+                        {errors.description && <div className="error-message">{errors.description}</div>}
                     </div>
 
                     <div className="row">
@@ -165,6 +218,7 @@ const TaskForm = () => {
                                 <option value="in-progress">In Progress</option>
                                 <option value="completed">Completed</option>
                             </select>
+                            {errors.status && <div className="error-message">{errors.status}</div>}
                         </div>
 
                         <div className="form-group col">
@@ -178,6 +232,7 @@ const TaskForm = () => {
                                 <option value="medium">Medium</option>
                                 <option value="high">High</option>
                             </select>
+                            {errors.priority && <div className="error-message">{errors.priority}</div>}
                         </div>
                     </div>
 

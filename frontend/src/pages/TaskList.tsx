@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit2, Trash2, Search, Filter } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 import api from '../api/axios';
 import '../styles/Tasks.css';
 
@@ -20,6 +21,7 @@ const TaskList = () => {
     const [filterStatus, setFilterStatus] = useState('');
     const [filterPriority, setFilterPriority] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const { showToast } = useToast();
 
     const fetchTasks = async () => {
         setLoading(true);
@@ -47,10 +49,15 @@ const TaskList = () => {
     const handleDelete = async (id: string) => {
         if (!window.confirm("Are you sure you want to delete this task?")) return;
         try {
-            await api.delete(`/tasks/${id}`);
-            setTasks(tasks.filter(t => t._id !== id));
-        } catch (error) {
+            const response = await api.delete(`/tasks/${id}`);
+            if (response.data.success) {
+                setTasks(tasks.filter(t => t._id !== id));
+                showToast('Task deleted successfully', 'success');
+            }
+        } catch (error: any) {
             console.error("Failed to delete task", error);
+            const errorMessage = error.response?.data?.message || 'Failed to delete task';
+            showToast(errorMessage, 'error');
         }
     };
 

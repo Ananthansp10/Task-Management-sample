@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import api from '../api/axios';
 import '../styles/Auth.css';
 
@@ -12,6 +13,7 @@ const Login = () => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [generalError, setGeneralError] = useState('');
     const { login } = useAuth();
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     const validate = () => {
@@ -35,10 +37,13 @@ const Login = () => {
             const response = await api.post('/auth/login', formData);
             if (response.data.success) {
                 login(response.data.data);
+                showToast('Login successful! Welcome back.', 'success');
                 navigate('/dashboard');
             }
         } catch (err: any) {
-            setGeneralError(err.response?.data?.message || 'Login failed');
+            const errorMessage = err.response?.data?.message || 'Login failed';
+            setGeneralError(errorMessage);
+            showToast(errorMessage, 'error');
         }
     };
 

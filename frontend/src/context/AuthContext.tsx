@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import { useToast } from './ToastContext';
 
 interface User {
     _id: string;
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     const checkAuth = async () => {
@@ -30,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const response = await api.get('/auth/me');
             if (response.data.success) {
-                setUser(response.data.data); // Adjust structure based on API response
+                setUser(response.data.data);
             } else {
                 setUser(null);
             }
@@ -54,9 +56,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             await api.post('/auth/logout');
             setUser(null);
+            showToast('Logged out successfully', 'success');
             navigate('/login');
         } catch (error) {
             console.error("Logout failed", error);
+            showToast('Logout failed', 'error');
         }
     };
 
